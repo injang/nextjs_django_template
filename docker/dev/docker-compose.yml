@@ -39,3 +39,17 @@ services:
     depends_on:
       - web
       - www
+
+  db:
+    container_name: db
+    image: postgres:16.2-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - ../../www/.env
+    volumes:
+      - web-db:/var/lib/postgresql/data
+
+volumes:
+  web-db:
