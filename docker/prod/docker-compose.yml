@@ -8,8 +8,8 @@ services:
       context: ../../web
       dockerfile: ../docker/prod/Dockerfile.web
     restart: always
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
     env_file:
       - ../../web/.env
 
@@ -20,8 +20,8 @@ services:
       context: ../../www
       dockerfile: ../docker/prod/Dockerfile.www
     restart: always
-    ports:
-      - 8000:8000
+    # ports:
+    #   - 8000:8000
     env_file:
       - ../../www/.env
     volumes:
@@ -43,8 +43,8 @@ services:
     container_name: db
     image: postgres:16.2-alpine
     restart: always
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
     env_file:
       - ../../www/.env
     volumes:
