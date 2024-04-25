@@ -6,22 +6,19 @@ services:
     # image: hub.docker.com/username/web:latest
     build:
       context: ../../web
-      dockerfile: ../docker/dev/Dockerfile.web
+      dockerfile: ../docker/prod/Dockerfile.web
     restart: always
     ports:
       - 3000:3000
     env_file:
       - ../../web/.env
-    volumes:
-      - ../../web:/app
-      - "/app/node_modules"
 
   www:
     container_name: www
     # image: hub.docker.com/username/www:latest
     build:
       context: ../../www
-      dockerfile: ../docker/dev/Dockerfile.www
+      dockerfile: ../docker/prod/Dockerfile.www
     restart: always
     ports:
       - 8000:8000
@@ -41,3 +38,17 @@ services:
     depends_on:
       - web
       - www
+
+  db:
+    container_name: db
+    image: postgres:16.2-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - ../../www/.env
+    volumes:
+      - web-db:/var/lib/postgresql/data
+
+volumes:
+  web-db:
