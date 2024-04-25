@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  web:
+    container_name: web
+    build:
+      context: ../../web
+      dockerfile: ../docker/dev/Dockerfile.web
+    restart: always
+    ports:
+      - 3000:3000
+    env_file:
+      - ../../web/.env
+    volumes:
+      - ../../web:/app
+      - "/app/node_modules"
+
+  www:
+    container_name: www
+    build:
+      context: ../../www
+      dockerfile: ../docker/dev/Dockerfile.www
+    restart: always
+    ports:
+      - 8000:8000
+    env_file:
+      - ../../www/.env
+    volumes:
+      - ../../www:/app
+
+  proxy:
+    container_name: proxy
+    image: nginx:1.26.0-alpine
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ../../proxy/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+      - www
+
+  db:
+    container_name: db
+    image: postgres:16.2-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - ../../www/.env
+    volumes:
+      - web-db:/var/lib/postgresql/data
+
+volumes:
+  web-db:
